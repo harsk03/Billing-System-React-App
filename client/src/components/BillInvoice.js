@@ -439,7 +439,6 @@ const BillInvoice = () => {
         <button className="scroll-up-btn" onClick={scrollToTop}>
           <FaChevronUp />
         </button>
-        <span className="scroll-up-text">Scroll Up</span>
       </div>
       )}
       
