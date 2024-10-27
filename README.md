@@ -1,4 +1,7 @@
-<img src="assets/Logo-icon.png" alt="Logo" width="80" height="90"/> </img> <h2> Billing System React App</h2>
+<div style="display: flex; align-items: center;">
+  <img src="assets/Logo-icon.png" alt="Logo" width="80" height="90" />
+  <h1 style="margin-left: 10px;">Billing System React App</h1>
+</div>
 # 🧾 Interactive Billing System
 
 Welcome to our state-of-the-art Billing System! This user-friendly application streamlines your billing process with just a few clicks.
