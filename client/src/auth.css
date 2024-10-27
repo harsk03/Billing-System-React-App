@@ -1,4 +1,11 @@
 /* client/src/auth.css */
+.logo {
+  width: 55px; /* Adjust size as needed */
+  height: auto; /* Maintain aspect ratio */
+  margin-right: 10px; /* Space between logo and text */
+  vertical-align: middle; /* Aligns image with text */ 
+}
+
 .auth-container {
   display: flex;
   justify-content: center;

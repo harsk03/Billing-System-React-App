@@ -1,4 +1,3 @@
-// client/src/components/AuthPage.js
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -36,7 +35,6 @@ const AuthPage = () => {
 
   return (
     <div className="auth-container">
-      {/* Emoji elements for background animation */}
       <div className="emoji"></div>
       <div className="emoji"></div>
       <div className="emoji"></div>
@@ -46,9 +44,10 @@ const AuthPage = () => {
       <div className="emoji"></div>
       <div className="emoji"></div>
 
-      {/* Auth box */}
       <div className="auth-box">
-        <h1 className="text-2xl font-bold mb-4">ChillBill</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          <img src="/Logo-icon.png" alt="Logo" className="logo" /> ChillBill
+        </h1>
         <h2>{isLogin ? 'Sign In' : 'Register'}</h2>
         <p>to access {userType} account</p>
         
