@@ -1,4 +1,4 @@
-﻿# Billing System React App
+![Alt text](assets/Logo.png) ﻿# Billing System React App
 # 🧾 Interactive Billing System
 
 Welcome to our state-of-the-art Billing System! This user-friendly application streamlines your billing process with just a few clicks.
