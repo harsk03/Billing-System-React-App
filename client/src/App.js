@@ -7,21 +7,31 @@ import CustomerList from './components/CustomerList';
 import BillInvoice from './components/BillInvoice';
 import Cashiers from './components/Cashiers';
 import RestaurantInfo from './components/RestaurantInfo';
+import UserTypeSelection from './components/UserTypeSelection';
+import AuthPage from './components/AuthPage';
+import PrivateRoute from './components/PrivateRoute';
 
 import './styles.css';
 import './billStyles.css';
+import './auth.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/customers" element={<CustomerList />} />
-          <Route path="/cashiers" element={<Cashiers />} />
-          <Route path="/bill" element={<BillInvoice />} />
-          <Route path="/restaurant-info" element={<RestaurantInfo />} />
+          {/* Public routes */}
+          <Route path="/auth" element={<UserTypeSelection />} />
+          <Route path="/auth/:userType" element={<AuthPage />} />
+          
+          {/* Protected routes */}
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<><Navbar /><Home /></>} />
+            <Route path="/customers" element={<><Navbar /><CustomerList /></>} />
+            <Route path="/cashiers" element={<><Navbar /><Cashiers /></>} />
+            <Route path="/bill" element={<><Navbar /><BillInvoice /></>} />
+            <Route path="/restaurant-info" element={<><Navbar /><RestaurantInfo /></>} />
+          </Route>
         </Routes>
       </div>
     </Router>
