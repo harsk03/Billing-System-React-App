@@ -18,7 +18,7 @@ const AuthPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     try {
       const endpoint = isLogin ? 'login' : 'register';
       const response = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, {
@@ -36,6 +36,17 @@ const AuthPage = () => {
 
   return (
     <div className="auth-container">
+      {/* Emoji elements for background animation */}
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+      <div className="emoji"></div>
+
+      {/* Auth box */}
       <div className="auth-box">
         <h1 className="text-2xl font-bold mb-4">ChillBill</h1>
         <h2>{isLogin ? 'Sign In' : 'Register'}</h2>
@@ -95,4 +106,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;  // Add this export
+export default AuthPage;
