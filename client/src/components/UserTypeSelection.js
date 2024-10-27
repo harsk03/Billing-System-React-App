@@ -9,7 +9,9 @@ const UserTypeSelection = () => {
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h1 className="text-2xl font-bold mb-4">ChillBill</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          <img src="/Logo-icon.png" alt="Logo" className="logo" /> ChillBill
+        </h1>
         <h2>Welcome to ChillBill</h2>
         <p>Select User Type</p>
         <div className="auth-buttons">
