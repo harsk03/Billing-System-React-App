@@ -1,4 +1,4 @@
-<img src="assets/Logo-icon.png" alt="Logo" width="80" height="90"/> 
+<img src="assets/Logo-icon.png" alt="Logo" width="80" height="90"/> </img>
 # Billing System React App
 # 🧾 Interactive Billing System
 
