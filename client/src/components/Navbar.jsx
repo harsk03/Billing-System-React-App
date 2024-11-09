@@ -30,6 +30,7 @@ function LogoutModal({ onClose, onConfirm }) {
 function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
+  const userRole = localStorage.getItem('userType');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -38,15 +39,26 @@ function Navbar() {
     navigate('/auth');
   };
 
+  // Define navigation items with role-based access
+  const navItems = [
+    { path: '/', label: 'Home', allowedRoles: ['admin', 'cashier'] },
+    { path: '/customers', label: 'Customers', allowedRoles: ['admin'] },
+    { path: '/cashiers', label: 'Cashiers', allowedRoles: ['admin'] },
+    { path: '/bill', label: 'Create Bill', allowedRoles: ['admin', 'cashier'] },
+    { path: '/restaurant-info', label: 'Restaurant Info', allowedRoles: ['admin', 'cashier'] }
+  ];
+
   return (
     <>
       <nav className="navbar flex items-center justify-between p-4 bg-white shadow-md">
         <ul className="flex items-center gap-6">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/customers">Customers</Link></li>
-          <li><Link to="/cashiers">Cashiers</Link></li>
-          <li><Link to="/bill">Create Bill</Link></li>
-          <li><Link to="/restaurant-info">Restaurant Info</Link></li>
+          {navItems.map((item, index) => (
+            item.allowedRoles.includes(userRole) && (
+              <li key={index}>
+                <Link to={item.path}>{item.label}</Link>
+              </li>
+            )
+          ))}
         </ul>
 
         <button 
