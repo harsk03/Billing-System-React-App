@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 router.post('/register', async (req, res) => {
   try {
@@ -25,10 +26,10 @@ router.post('/register', async (req, res) => {
     
     await user.save();
     
-    // Generate JWT token
+    // Generate JWT token using the secret from the environment variable
     const token = jwt.sign(
       { userId: user._id, role: user.role },
-      'your_jwt_secret', // Replace with actual secret from environment variables
+      process.env.JWT_SECRET, // Use secret from .env
       { expiresIn: '24h' }
     );
     
@@ -56,10 +57,10 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
     
-    // Generate JWT token
+    // Generate JWT token using the secret from the environment variable
     const token = jwt.sign(
       { userId: user._id, role: user.role },
-      '0858669d071defea08c49f389071e5101cb55ef2c0cee3fb6a83a883eb532d78a1d5c55d822b8dfaaf8be9baf03b3df5fe600befd40967e16bbab3c37b99d44e', // Replace with actual secret from environment variables
+      process.env.JWT_SECRET, // Use secret from .env
       { expiresIn: '24h' }
     );
     
