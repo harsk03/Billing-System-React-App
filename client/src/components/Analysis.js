@@ -19,26 +19,26 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 // Sample data remained the same
 const SAMPLE_MONTHLY_DATA = [
-  { month: 'January', revenue: 45000 },
-  { month: 'February', revenue: 52000 },
-  { month: 'March', revenue: 48000 },
-  { month: 'April', revenue: 61000 },
-  { month: 'May', revenue: 55000 },
-  { month: 'June', revenue: 67000 },
-  { month: 'July', revenue: 72000 },
-  { month: 'August', revenue: 69000 },
-  { month: 'September', revenue: 59000 },
-  { month: 'October', revenue: 63000 },
-  { month: 'November', revenue: 58000 },
-  { month: 'December', revenue: 74000 }
+  { month: 'January', revenue: 4500 },
+  { month: 'February', revenue: 5200 },
+  { month: 'March', revenue: 4800 },
+  { month: 'April', revenue: 6100 },
+  { month: 'May', revenue: 5500 },
+  { month: 'June', revenue: 6700 },
+  { month: 'July', revenue: 7200 },
+  { month: 'August', revenue: 6900 },
+  { month: 'September', revenue: 5900 },
+  { month: 'October', revenue: 6300 },
+  { month: 'November', revenue: 5800 },
+  { month: 'December', revenue: 7400 }
 ];
 
 const SAMPLE_YEARLY_DATA = [
-  { year: 2020, revenue: 580000 },
-  { year: 2021, revenue: 650000 },
-  { year: 2022, revenue: 720000 },
-  { year: 2023, revenue: 790000 },
-  { year: 2024, revenue: 723000 }
+  { year: 2020, revenue: 58000 },
+  { year: 2021, revenue: 65000 },
+  { year: 2022, revenue: 72000 },
+  { year: 2023, revenue: 79000 },
+  { year: 2024, revenue: 72300 }
 ];
 
 const SAMPLE_CASHIER_DATA = [

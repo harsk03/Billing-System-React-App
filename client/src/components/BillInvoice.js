@@ -267,53 +267,55 @@ const BillInvoice = () => {
     );
 
   
-  const PrintableBill = React.forwardRef((props, ref) => (
-    <div ref={ref} className="printable-bill">
-      <h1 style={{ textAlign: 'center' }}>{restaurantInfo.name}</h1>
-      <p style={{ textAlign: 'center' }}>{restaurantInfo.address}</p>
-      <p style={{ textAlign: 'center' }}>Pincode: 411001, Pune, India</p>
-      <p style={{ textAlign: 'center' }}>Phone: +91 12345 67890</p>
-      <hr />
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <p><strong>Invoice Number:</strong> {invoiceNumber}</p>
-          <p><strong>Date:</strong> {date}</p>
-          <p><strong>Time:</strong> {time}</p>
+    const PrintableBill = React.forwardRef((props, ref) => (
+      <div ref={ref} className="printable-bill">
+        <h1 style={{ textAlign: 'center' }}>{restaurantInfo.name}</h1>
+        <p style={{ textAlign: 'center' }}>{restaurantInfo.address}</p>
+        <p style={{ textAlign: 'center' }}>
+          {restaurantInfo.city}, {restaurantInfo.state} - {restaurantInfo.pincode}
+        </p>
+        <p style={{ textAlign: 'center' }}>Phone: {restaurantInfo.phone}</p>
+        <hr />
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+            <p><strong>Invoice Number:</strong> {invoiceNumber}</p>
+            <p><strong>Date:</strong> {date}</p>
+            <p><strong>Time:</strong> {time}</p>
+          </div>
+          <div>
+            <p><strong>Customer:</strong> {selectedCustomer === "walk-in" ? "Walk-in" : customers.find(c => c._id === selectedCustomer)?.name}</p>
+            <p><strong>Cashier:</strong> {selectedCashier ? cashiers.find(c => c._id === selectedCashier)?.name : ''}</p>
+          </div>
         </div>
-        <div>
-          <p><strong>Customer:</strong> {selectedCustomer === "walk-in" ? "Walk-in" : customers.find(c => c._id === selectedCustomer)?.name}</p>
-          <p><strong>Cashier:</strong> {selectedCashier ? cashiers.find(c => c._id === selectedCashier)?.name : ''}</p>
-        </div>
-      </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
-        <thead>
-          <tr>
-            <th style={{ border: '1px solid black', padding: '5px' }}>Item</th>
-            <th style={{ border: '1px solid black', padding: '5px' }}>Quantity</th>
-            <th style={{ border: '1px solid black', padding: '5px' }}>Price</th>
-            <th style={{ border: '1px solid black', padding: '5px' }}>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item, index) => (
-            <tr key={index}>
-              <td style={{ border: '1px solid black', padding: '5px' }}>{item.name}</td>
-              <td style={{ border: '1px solid black', padding: '5px', textAlign: 'center' }}>{item.quantity}</td>
-              <td style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}>₹{item.price.toFixed(2)}</td>
-              <td style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}>₹{(item.price * item.quantity).toFixed(2)}</td>
+        <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+          <thead>
+            <tr>
+              <th style={{ border: '1px solid black', padding: '5px' }}>Item</th>
+              <th style={{ border: '1px solid black', padding: '5px' }}>Quantity</th>
+              <th style={{ border: '1px solid black', padding: '5px' }}>Price</th>
+              <th style={{ border: '1px solid black', padding: '5px' }}>Total</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan="3" style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}><strong>Total:</strong></td>
-            <td style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}><strong>₹{calculateTotal().toFixed(2)}</strong></td>
-          </tr>
-        </tfoot>
-      </table>
-      <p style={{ marginTop: '20px', textAlign: 'center' }}>Thank you for your visit!</p>
-    </div>
-  ));
+          </thead>
+          <tbody>
+            {items.map((item, index) => (
+              <tr key={index}>
+                <td style={{ border: '1px solid black', padding: '5px' }}>{item.name}</td>
+                <td style={{ border: '1px solid black', padding: '5px', textAlign: 'center' }}>{item.quantity}</td>
+                <td style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}>₹{item.price.toFixed(2)}</td>
+                <td style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}>₹{(item.price * item.quantity).toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="3" style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}><strong>Total:</strong></td>
+              <td style={{ border: '1px solid black', padding: '5px', textAlign: 'right' }}><strong>₹{calculateTotal().toFixed(2)}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+        <p style={{ marginTop: '20px', textAlign: 'center' }}>Thank you for your visit!</p>
+      </div>
+    ));
   
   const handleUpdateConfirmation = () => {
     setShowConfirmModal(true);
