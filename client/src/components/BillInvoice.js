@@ -323,24 +323,39 @@ const BillInvoice = () => {
     updateDateTime();
     const total = calculateTotal();
     try {
-      await axios.post('http://localhost:5000/api/bills/update', { 
+      // Create the bill data object with all necessary fields
+      const billData = { 
         total,
         date,
         time,
         items,
+        invoiceNumber, // Add invoice number
         customerInfo: selectedCustomer === "walk-in" ? "Walk-in" : customers.find(c => c._id === selectedCustomer)?.name,
         cashierInfo: cashiers.find(c => c._id === selectedCashier)?.name
-      });
+      };
+  
+      // First, create the bill
+      await axios.post('http://localhost:5000/api/bills', billData);
+      
+      // Then update the earnings
+      await axios.post('http://localhost:5000/api/bills/update', billData);
+      
       setIsHomeUpdated(true);
       setShowConfirmModal(false);
-      // Show success message
-      alert('Earnings and bill count updated successfully!');
+      alert('Bill created and earnings updated successfully!');
+      
+      // Clear the bill after successful creation
+      setItems([]);
+      setSelectedCustomer('');
+      setSelectedCashier('');
+      generateInvoiceDetails(); // Generate new invoice number for next bill
+      
     } catch (error) {
-      console.error('Error updating earnings and bills:', error);
+      console.error('Error creating bill:', error);
+      alert('Error creating bill. Please try again.');
     }
   };
 
-  
   return (
     <div className="bill-invoice-container">
      {showScrollUp && (

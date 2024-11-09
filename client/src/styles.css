@@ -90,7 +90,7 @@ body {
   box-shadow: 0 12px 20px var(--shadow-color);
 }
 
-.customer-list,.cashiers-container {
+.customer-list,.cashiers-container,.bill-history,.analysis {
   background-color: var(--card-background);
   border-radius: 12px;
   padding: 30px;
@@ -254,7 +254,7 @@ body {
   to { opacity: 1; }
 }
 
-.customer-list, .bill-invoice {
+.customer-list, .bill-invoice,.analysis,.bill-history,.restaurant-info-container,.cashiers-container {
   animation: fadeIn 0.5s ease-in-out;
 }
 
