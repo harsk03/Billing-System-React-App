@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 
-import '../styles.css';
-
 const BillHistory = () => {
   const [bills, setBills] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,17 +14,23 @@ const BillHistory = () => {
   const fetchBills = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/bills/history');
-      setBills(response.data);
+      // Filter out invalid records during initial data setup
+      const validBills = response.data.filter(bill => 
+        bill &&
+        bill.invoiceNumber && 
+        bill.total !== undefined &&
+        bill.date &&
+        bill.cashierInfo
+      );
+      setBills(validBills);
     } catch (error) {
       console.error('Error fetching bills:', error);
-      setBills([]); // Set empty array on error
+      setBills([]);
     }
   };
 
   const filterBills = () => {
     return bills.filter(bill => {
-      if (!bill) return false;
-      
       const searchTermLower = searchTerm.toLowerCase();
       
       switch (filterType) {
@@ -35,7 +39,9 @@ const BillHistory = () => {
         
         case 'month':
           try {
-            const billMonth = new Date(bill.date).toLocaleString('default', { month: 'long' });
+            const date = new Date(bill.date);
+            if (isNaN(date.getTime())) return false; // Invalid date check
+            const billMonth = date.toLocaleString('default', { month: 'long' });
             return billMonth.toLowerCase().includes(searchTermLower);
           } catch {
             return false;
@@ -43,16 +49,42 @@ const BillHistory = () => {
         
         case 'year':
           try {
-            const billYear = new Date(bill.date).getFullYear().toString();
+            const date = new Date(bill.date);
+            if (isNaN(date.getTime())) return false; // Invalid date check
+            const billYear = date.getFullYear().toString();
             return billYear.includes(searchTerm);
           } catch {
             return false;
           }
         
         default:
-          return true;
+          return false;
       }
     });
+  };
+
+  const formatDate = (dateString) => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return dateString; // Return original if invalid
+      return date.toLocaleDateString('en-IN');
+    } catch {
+      return dateString;
+    }
+  };
+
+  const formatTime = (timeString) => {
+    try {
+      const date = new Date(timeString);
+      if (isNaN(date.getTime())) return timeString; // Return original if invalid
+      return date.toLocaleTimeString('en-IN', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+    } catch {
+      return timeString;
+    }
   };
 
   return (
@@ -77,7 +109,7 @@ const BillHistory = () => {
           className="border rounded-lg px-4 py-2"
         >
           <option value="invoice">Search by Invoice</option>
-          <option value="month">Search by Month</option>
+          <option value="month">Search by Month (name)</option>
           <option value="year">Search by Year</option>
         </select>
       </div>
@@ -94,13 +126,13 @@ const BillHistory = () => {
             </tr>
           </thead>
           <tbody>
-            {filterBills().map((bill, index) => (
-              <tr key={index}>
+            {filterBills().map((bill) => (
+              <tr key={bill.invoiceNumber} className="hover:bg-gray-50">
                 <td className="border px-4 py-2">{bill.invoiceNumber}</td>
                 <td className="border px-4 py-2">{bill.cashierInfo}</td>
                 <td className="border px-4 py-2">₹{bill.total?.toFixed(2) ?? '0.00'}</td>
-                <td className="border px-4 py-2">{bill.date}</td>
-                <td className="border px-4 py-2">{bill.time}</td>
+                <td className="border px-4 py-2">{formatDate(bill.date)}</td>
+                <td className="border px-4 py-2">{formatTime(bill.date)}</td>
               </tr>
             ))}
           </tbody>

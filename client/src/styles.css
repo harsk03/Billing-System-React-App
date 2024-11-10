@@ -307,21 +307,21 @@ body {
 .restaurant-info-container form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1px;
 }
 
 .restaurant-info-container label {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   color: #555;
 }
 
 .restaurant-info-container input {
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 16px;
-  width: 97%;
+  width: 100%;
 }
 
 .restaurant-info-container input:focus {
@@ -331,7 +331,7 @@ body {
 }
 
 .restaurant-info-container button {
-  padding: 10px 15px;
+  padding: 15px 10px;
   background-color: var(--primary-color);
   color: white;
   border: none;

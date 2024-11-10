@@ -210,25 +210,6 @@ const BillInvoice = () => {
     }
   };
 
-  // const updateEarningsAndBills = async () => {
-  //   updateDateTime();
-  //   const total = calculateTotal();
-  //   try {
-  //     await axios.post('http://localhost:5000/api/bills/update', { 
-  //       total,
-  //       date,
-  //       time,
-  //       items,
-  //       customerInfo: selectedCustomer === "walk-in" ? "Walk-in" : customers.find(c => c._id === selectedCustomer)?.name,
-  //       cashierInfo: cashiers.find(c => c._id === selectedCashier)?.name
-  //     });
-  //     setIsHomeUpdated(true);
-  //     alert('Earnings and bill count updated successfully!');
-  //   } catch (error) {
-  //     console.error('Error updating earnings and bills:', error);
-  //   }
-  // };
-
   const filteredAndSortedItems = menu
     .flatMap(category => 
       category.subcategories 
