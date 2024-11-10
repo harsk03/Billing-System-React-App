@@ -16,6 +16,7 @@ function Cashiers() {
       setCashiers(response.data);
     } catch (error) {
       console.error('Error fetching cashiers:', error);
+      alert('Error loading cashiers. Please try again.');
     }
   };
 
@@ -58,6 +59,12 @@ function Cashiers() {
     setErrors(prevErrors => ({ ...prevErrors, [name]: errorMessage }));
   };
 
+  const checkDuplicatePhone = (phone, currentCashierId = null) => {
+    return cashiers.some(cashier => 
+      cashier.phone === phone && cashier._id !== currentCashierId
+    );
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === 'Tab') {
       validateField(e.target.name, e.target.value);
@@ -65,42 +72,67 @@ function Cashiers() {
   };
 
   const addCashier = async () => {
+    // First check all validation errors
     if (Object.values(errors).some(error => error !== '')) {
       alert('Please correct the errors before submitting');
       return;
     }
+
+    // Check for duplicate phone number
+    if (checkDuplicatePhone(newCashier.phone)) {
+      alert('This phone number is already registered with another cashier');
+      return;
+    }
+
     try {
       await axios.post('http://localhost:5000/api/cashiers', newCashier);
       setNewCashier({ name: '', experience: '', email: '', phone: '' });
       setErrors({ name: '', experience: '', email: '', phone: '' });
       fetchCashiers();
+      alert('Cashier added successfully!');
     } catch (error) {
       console.error('Error adding cashier:', error);
+      alert('Error adding cashier. Please try again.');
     }
   };
 
   const editCashier = async (cashier) => {
+    // Check for duplicate phone number, excluding the current cashier
+    if (checkDuplicatePhone(cashier.phone, cashier._id)) {
+      alert('This phone number is already registered with another cashier');
+      fetchCashiers(); // Refresh to revert changes
+      return;
+    }
+
     try {
       await axios.put(`http://localhost:5000/api/cashiers/${cashier._id}`, cashier);
       fetchCashiers();
+      alert('Cashier updated successfully!');
     } catch (error) {
       console.error('Error editing cashier:', error);
+      alert('Error updating cashier. Please try again.');
+      fetchCashiers(); // Refresh to revert changes
     }
   };
 
   const deleteCashier = async (cashierId) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/cashiers/${cashierId}`);
-      fetchCashiers();
-    } catch (error) {
-      console.error('Error deleting cashier:', error);
+    if (window.confirm('Are you sure you want to delete this cashier?')) {
+      try {
+        await axios.delete(`http://localhost:5000/api/cashiers/${cashierId}`);
+        fetchCashiers();
+        alert('Cashier deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting cashier:', error);
+        alert('Error deleting cashier. Please try again.');
+      }
     }
   };
 
   return (
-    <div className="cashiers-container">
-      <h2>Cashiers</h2>
-      <div className="new-cashier">
+    <div className="cashiers-container p-6">
+      <h2 className="text-2xl font-bold mb-6">Cashiers</h2>
+      
+      <div className="new-cashier grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div>
           <input
             type="text"
@@ -109,6 +141,7 @@ function Cashiers() {
             value={newCashier.name}
             onChange={handleNewCashierChange}
             onKeyDown={handleKeyDown}
+            className="w-full p-2 border rounded"
           />
           {errors.name && <div className="error-message">{errors.name}</div>}
         </div>
@@ -120,6 +153,7 @@ function Cashiers() {
             value={newCashier.experience}
             onChange={handleNewCashierChange}
             onKeyDown={handleKeyDown}
+            className="w-full p-2 border rounded"
           />
           {errors.experience && <div className="error-message">{errors.experience}</div>}
         </div>
@@ -131,6 +165,7 @@ function Cashiers() {
             value={newCashier.email}
             onChange={handleNewCashierChange}
             onKeyDown={handleKeyDown}
+            className="w-full p-2 border rounded"
           />
           {errors.email && <div className="error-message">{errors.email}</div>}
         </div>
@@ -142,60 +177,84 @@ function Cashiers() {
             value={newCashier.phone}
             onChange={handleNewCashierChange}
             onKeyDown={handleKeyDown}
+            className="w-full p-2 border rounded"
           />
           {errors.phone && <div className="error-message">{errors.phone}</div>}
         </div>
-        <button onClick={addCashier} class="submit-btn">Add Cashier</button>
+        <button 
+          onClick={addCashier}
+          className="submit-btn"
+        >
+          Add Cashier
+        </button>
       </div>
-      <table className="cashiers-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Experience</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cashiers.map((cashier) => (
-            <tr key={cashier._id}>
-              <td>
-                <input
-                  type="text"
-                  value={cashier.name}
-                  onChange={(e) => editCashier({ ...cashier, name: e.target.value })}
-                />
-              </td>
-              <td>
-                <input
-                  type="number"
-                  value={cashier.experience}
-                  onChange={(e) => editCashier({ ...cashier, experience: e.target.value })}
-                />
-              </td>
-              <td>
-                <input
-                  type="email"
-                  value={cashier.email}
-                  onChange={(e) => editCashier({ ...cashier, email: e.target.value })}
-                />
-              </td>
-              <td>
-                <input
-                  type="tel"
-                  value={cashier.phone}
-                  onChange={(e) => editCashier({ ...cashier, phone: e.target.value })}
-                />
-              </td>
-              <td>
-                <button class="edit-btn" onClick={() => editCashier(cashier)}>Save</button>
-                <button class="delete-btn" onClick={() => deleteCashier(cashier._id)}>Delete</button>
-              </td>
+
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse bg-white shadow rounded">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="p-4 text-left">Name</th>
+              <th className="p-4 text-left">Experience</th>
+              <th className="p-4 text-left">Email</th>
+              <th className="p-4 text-left">Phone</th>
+              <th className="p-4 text-left">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {cashiers.map((cashier) => (
+              <tr key={cashier._id} className="border-t">
+                <td className="p-4">
+                  <input
+                    type="text"
+                    value={cashier.name}
+                    onChange={(e) => editCashier({ ...cashier, name: e.target.value })}
+                    className="w-full p-1 border rounded"
+                  />
+                </td>
+                <td className="p-4">
+                  <input
+                    type="number"
+                    value={cashier.experience}
+                    onChange={(e) => editCashier({ ...cashier, experience: e.target.value })}
+                    className="w-full p-1 border rounded"
+                  />
+                </td>
+                <td className="p-4">
+                  <input
+                    type="email"
+                    value={cashier.email}
+                    onChange={(e) => editCashier({ ...cashier, email: e.target.value })}
+                    className="w-full p-1 border rounded"
+                  />
+                </td>
+                <td className="p-4">
+                  <input
+                    type="tel"
+                    value={cashier.phone}
+                    onChange={(e) => editCashier({ ...cashier, phone: e.target.value })}
+                    className="w-full p-1 border rounded"
+                  />
+                </td>
+                <td className="p-4">
+                  <button 
+                    onClick={() => editCashier(cashier)}
+                    className="edit-btn"
+                  >
+                    Save
+                  </button>
+                  <button 
+                    onClick={() => deleteCashier(cashier._id)}
+                    className="delete-btn"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <style jsx>{`
         .error-message {
           color: red;

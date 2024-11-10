@@ -58,4 +58,14 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+app.get('/api/customers/check-phone/:phone', async (req, res) => {
+  try {
+    const { phone } = req.params;
+    const existingCustomer = await Customer.findOne({ where: { phone } });
+    res.json({ exists: !!existingCustomer });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

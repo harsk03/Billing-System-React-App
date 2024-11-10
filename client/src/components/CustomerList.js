@@ -1,4 +1,3 @@
-// client/src/components/CustomerList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CustomerForm from './CustomerForm';
@@ -6,7 +5,7 @@ import CustomerForm from './CustomerForm';
 function CustomerList() {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [editingCustomer, setEditingCustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
   useEffect(() => {
     fetchCustomers();
@@ -26,16 +25,23 @@ function CustomerList() {
   };
 
   const handleEdit = (customer) => {
-    setEditingCustomer(customer);
+    setSelectedCustomer(customer);
+  };
+
+  const handleUpdateComplete = () => {
+    setSelectedCustomer(null);
+    fetchCustomers();
   };
 
   const handleDelete = async (customerId) => {
-    try {
-      console.log(`Attempting to delete customer with ID: ${customerId}`); // Log the ID
-      await axios.delete(`http://localhost:5000/api/customers/${customerId}`);
-      fetchCustomers(); // Refresh the customer list after deletion
-    } catch (error) {
-      console.error('Error deleting customer:', error);
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      try {
+        console.log(`Attempting to delete customer with ID: ${customerId}`);
+        await axios.delete(`http://localhost:5000/api/customers/${customerId}`);
+        fetchCustomers();
+      } catch (error) {
+        console.error('Error deleting customer:', error);
+      }
     }
   };
 
@@ -53,19 +59,90 @@ function CustomerList() {
         onChange={handleSearch}
         className="search-input"
       />
-      <CustomerForm onCustomerAdded={fetchCustomers} editingCustomer={editingCustomer} setEditingCustomer={setEditingCustomer} />
+      
+      <CustomerForm 
+        onCustomerAdded={fetchCustomers}
+        selectedCustomer={selectedCustomer}
+        onUpdateComplete={handleUpdateComplete}
+      />
+
+      <div className="customer-header">
+        <span>Name</span>
+        <span>Email</span>
+        <span>Phone</span>
+        <span>Actions</span>
+      </div>
+
       <ul>
         {filteredCustomers.map(customer => (
           <li key={customer._id} className="customer-item">
             <span>{customer.name}</span>
             <span>{customer.email}</span>
             <span>{customer.phone}</span>
-            <button className="edit-btn" onClick={() => handleEdit(customer)}>Edit</button>
-            <button className="delete-btn" onClick={() => handleDelete(customer._id)}>Delete</button>
+            <div className="action-buttons">
+              <button 
+                className="edit-btn" 
+                onClick={() => handleEdit(customer)}
+              >
+                Edit
+              </button>
+              <button 
+                className="delete-btn" 
+                onClick={() => handleDelete(customer._id)}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
 
+      <style jsx>{`
+        .customer-list {
+          padding: 20px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+        
+
+        .customer-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          margin-bottom: 10px;
+          background-color: #f5f5f5;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-weight: bold;
+        }
+
+        .customer-header span {
+          flex: 1;
+          padding: 0 10px;
+        }
+
+        .customer-header span:last-child {
+          flex: 0.5;
+          text-align: center;
+        }
+        
+        .customer-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          margin-bottom: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          background-color: #fff;
+        }
+        
+        .customer-item span {
+          flex: 1;
+          padding: 0 10px;
+        }
+      `}</style>
     </div>
   );
 }

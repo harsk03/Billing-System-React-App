@@ -17,21 +17,77 @@ import {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
-// Sample data remained the same
-const SAMPLE_MONTHLY_DATA = [
-  { month: 'January', revenue: 4500 },
-  { month: 'February', revenue: 5200 },
-  { month: 'March', revenue: 4800 },
-  { month: 'April', revenue: 6100 },
-  { month: 'May', revenue: 5500 },
-  { month: 'June', revenue: 6700 },
-  { month: 'July', revenue: 7200 },
-  { month: 'August', revenue: 6900 },
-  { month: 'September', revenue: 5900 },
-  { month: 'October', revenue: 6300 },
-  { month: 'November', revenue: 5800 },
-  { month: 'December', revenue: 7400 }
-];
+// Modified monthly data with year-specific variations
+const ALL_MONTHLY_DATA = {
+  2020: [
+    { month: 'January', revenue: 3100 },
+    { month: 'February', revenue: 5300 },
+    { month: 'March', revenue: 4000 },
+    { month: 'April', revenue: 6800 },
+    { month: 'May', revenue: 4200 },
+    { month: 'June', revenue: 4600 },
+    { month: 'July', revenue: 4900 },
+    { month: 'August', revenue: 5100 },
+    { month: 'September', revenue: 4800 },
+    { month: 'October', revenue: 5000 },
+    { month: 'November', revenue: 5200 },
+    { month: 'December', revenue: 5400 }
+  ],
+  2021: [
+    { month: 'January', revenue: 4000 },
+    { month: 'February', revenue: 5200 },
+    { month: 'March', revenue: 5400 },
+    { month: 'April', revenue: 4100 },
+    { month: 'May', revenue: 5300 },
+    { month: 'June', revenue: 5600 },
+    { month: 'July', revenue: 5900 },
+    { month: 'August', revenue: 6100 },
+    { month: 'September', revenue: 5800 },
+    { month: 'October', revenue: 6000 },
+    { month: 'November', revenue: 6200 },
+    { month: 'December', revenue: 6500 }
+  ],
+  2022: [
+    { month: 'January', revenue: 5800 },
+    { month: 'February', revenue: 6000 },
+    { month: 'March', revenue: 6200 },
+    { month: 'April', revenue: 6400 },
+    { month: 'May', revenue: 6600 },
+    { month: 'June', revenue: 6800 },
+    { month: 'July', revenue: 7000 },
+    { month: 'August', revenue: 4200 },
+    { month: 'September', revenue: 5400 },
+    { month: 'October', revenue: 7600 },
+    { month: 'November', revenue: 7800 },
+    { month: 'December', revenue: 8000 }
+  ],
+  2023: [
+    { month: 'January', revenue: 6500 },
+    { month: 'February', revenue: 6800 },
+    { month: 'March', revenue: 7100 },
+    { month: 'April', revenue: 7400 },
+    { month: 'May', revenue: 5700 },
+    { month: 'June', revenue: 8000 },
+    { month: 'July', revenue: 6300 },
+    { month: 'August', revenue: 8600 },
+    { month: 'September', revenue: 8900 },
+    { month: 'October', revenue: 7200 },
+    { month: 'November', revenue: 9500 },
+    { month: 'December', revenue: 9800 }
+  ],
+  2024: [
+    { month: 'January', revenue: 7200 },
+    { month: 'February', revenue: 7500 },
+    { month: 'March', revenue: 7800 },
+    { month: 'April', revenue: 4100 },
+    { month: 'May', revenue: 5400 },
+    { month: 'June', revenue: 8700 },
+    { month: 'July', revenue: 9000 },
+    { month: 'August', revenue: 8300 },
+    { month: 'September', revenue: 9600 },
+    { month: 'October', revenue: 9900 }
+  ]
+};
 
 const SAMPLE_YEARLY_DATA = [
   { year: 2020, revenue: 58000 },
@@ -50,7 +106,7 @@ const SAMPLE_CASHIER_DATA = [
 ];
 
 const Analysis = () => {
-  const [monthlyRevenue, setMonthlyRevenue] = useState(SAMPLE_MONTHLY_DATA);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
   const [cashierStats, setCashierStats] = useState(SAMPLE_CASHIER_DATA);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [loading, setLoading] = useState(false);
@@ -60,7 +116,8 @@ const Analysis = () => {
     const filterDataByYear = () => {
       setLoading(true);
       try {
-        setMonthlyRevenue(SAMPLE_MONTHLY_DATA);
+        const yearData = ALL_MONTHLY_DATA[selectedYear] || [];
+        setMonthlyRevenue(yearData);
         setCashierStats(SAMPLE_CASHIER_DATA);
       } catch (error) {
         setError('Error processing data. Please try again later.');
