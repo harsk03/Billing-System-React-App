@@ -123,7 +123,7 @@ const Home = () => {
           </button>
           <button 
             className="menu-item"
-            onClick={() => handleNavigation('/')}
+            onClick={() => handleNavigation('/settings')}
           >
             Settings
           </button>

@@ -12,6 +12,8 @@ import RestaurantInfo from './components/RestaurantInfo';
 import UserTypeSelection from './components/UserTypeSelection';
 import AuthPage from './components/AuthPage';
 import PrivateRoute from './components/PrivateRoute';
+import Settings from './components/Settings';
+
 import './styles.css';
 import './billStyles.css';
 import './auth.css';
@@ -39,6 +41,7 @@ function App() {
               <Route path="/bill-history" element={<><Navbar /><BillHistory /></>} />
               <Route path="/analysis" element={<><Navbar /><Analysis /></>} />
               <Route path="/restaurant-info" element={<><Navbar /><RestaurantInfo /></>} />
+              <Route path="/settings" element={<><Navbar /><Settings /></>} />
             </Route>
           </Routes>
         </div>

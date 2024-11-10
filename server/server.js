@@ -11,6 +11,7 @@ const cashiersRouter = require('./routes/cashiers');
 const restaurantInfoRouter = require('./routes/restaurantInfo');
 const menuRouter = require('./routes/menu');
 const authRouter = require('./routes/auth');
+const feedbackRoutes = require('./routes/feedback-routes');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/cashiers', cashiersRouter); // Register the cashiers route
 app.use('/api/restaurant-info', restaurantInfoRouter);
 app.use('/api/menu', menuRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/feedback', feedbackRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

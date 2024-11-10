@@ -60,7 +60,7 @@ body {
   box-shadow: 0 12px 20px var(--shadow-color);
 }
 
-.customer-list,.cashiers-container,.bill-history,.analysis {
+.customer-list,.cashiers-container,.bill-history,.analysis,.settings {
   background-color: var(--card-background);
   border-radius: 12px;
   padding: 30px;
@@ -224,7 +224,7 @@ body {
   to { opacity: 1; }
 }
 
-.customer-list, .bill-invoice,.analysis,.bill-history,.restaurant-info-container,.cashiers-container {
+.customer-list, .bill-invoice,.analysis,.bill-history,.restaurant-info-container,.cashiers-container,.settings{
   animation: fadeIn 0.5s ease-in-out;
 }
 
