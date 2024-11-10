@@ -19,22 +19,28 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Routes>
-          {/* Public routes */}
-          <Route path="/auth" element={<UserTypeSelection />} />
-          <Route path="/auth/:userType" element={<AuthPage />} />
-         
-          {/* Protected routes */}
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<><Navbar /><Home /></>} />
-            <Route path="/customers" element={<><Navbar /><CustomerList /></>} />
-            <Route path="/cashiers" element={<><Navbar /><Cashiers /></>} />
-            <Route path="/bill" element={<><Navbar /><BillInvoice /></>} />
-            <Route path="/bill-history" element={<><Navbar /><BillHistory /></>} />
-            <Route path="/analysis" element={<><Navbar /><Analysis /></>} />
-            <Route path="/restaurant-info" element={<><Navbar /><RestaurantInfo /></>} />
-          </Route>
-        </Routes>
+        <div className="header-container">
+          <div className="company-branding">
+            <img src="/Logo-icon.png" alt="ChillBill Logo" />
+            <span>ChillBill</span>
+          </div>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/auth" element={<UserTypeSelection />} />
+            <Route path="/auth/:userType" element={<AuthPage />} />
+           
+            {/* Protected routes */}
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<><Navbar /><Home /></>} />
+              <Route path="/customers" element={<><Navbar /><CustomerList /></>} />
+              <Route path="/cashiers" element={<><Navbar /><Cashiers /></>} />
+              <Route path="/bill" element={<><Navbar /><BillInvoice /></>} />
+              <Route path="/bill-history" element={<><Navbar /><BillHistory /></>} />
+              <Route path="/analysis" element={<><Navbar /><Analysis /></>} />
+              <Route path="/restaurant-info" element={<><Navbar /><RestaurantInfo /></>} />
+            </Route>
+          </Routes>
+        </div>
       </div>
     </Router>
   );

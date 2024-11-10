@@ -84,10 +84,14 @@ function Navbar() {
 
       <style jsx>{`
         .navbar {
+          background-color: var(--primary-color);
+          margin-bottom: 30px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 0.5rem 2rem;
+          padding: 15px 10px;
+          box-shadow: 0 2px 10px var(--shadow-color);
         }
 
         .navbar ul {
@@ -96,10 +100,26 @@ function Navbar() {
           list-style: none;
         }
 
+        .navbar li {
+          margin: 0 20px;
+        }
+
         .nav-icon {
           display: inline-flex;
           align-items: center;
           margin-right: 0.15rem;
+        }
+
+        .navbar a {
+          color: white;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s ease;
+          font-size: 1.1em;
+        }
+        
+        .navbar a:hover {
+          color: var(--secondary-color);
         }
 
         .logout-button {
