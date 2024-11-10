@@ -327,11 +327,11 @@ const BillInvoice = () => {
       setShowConfirmModal(false);
       alert('Bill created and earnings updated successfully!');
       
-      // Clear the bill after successful creation
-      setItems([]);
-      setSelectedCustomer('');
-      setSelectedCashier('');
-      generateInvoiceDetails(); // Generate new invoice number for next bill
+      // // Clear the bill after successful creation
+      // setItems([]);
+      // setSelectedCustomer('');
+      // setSelectedCashier('');
+      // generateInvoiceDetails(); // Generate new invoice number for next bill
       
     } catch (error) {
       console.error('Error creating bill:', error);
