@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import CustomerList from './components/CustomerList';
@@ -16,32 +16,17 @@ import './billStyles.css';
 import './auth.css';
 
 function App() {
-  // Check if user is authenticated
-  const isAuthenticated = () => {
-    return localStorage.getItem('token') !== null;
-  };
-
   return (
     <Router>
       <div className="App">
         <Routes>
           {/* Public routes */}
-          <Route 
-            path="/" 
-            element={
-              isAuthenticated() ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <Navigate to="/auth" replace />
-              )
-            } 
-          />
           <Route path="/auth" element={<UserTypeSelection />} />
           <Route path="/auth/:userType" element={<AuthPage />} />
-          
+         
           {/* Protected routes */}
           <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<><Navbar /><Home /></>} />
+            <Route path="/" element={<><Navbar /><Home /></>} />
             <Route path="/customers" element={<><Navbar /><CustomerList /></>} />
             <Route path="/cashiers" element={<><Navbar /><Cashiers /></>} />
             <Route path="/bill" element={<><Navbar /><BillInvoice /></>} />
@@ -49,9 +34,6 @@ function App() {
             <Route path="/analysis" element={<><Navbar /><Analysis /></>} />
             <Route path="/restaurant-info" element={<><Navbar /><RestaurantInfo /></>} />
           </Route>
-
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/auth" replace />} />
         </Routes>
       </div>
     </Router>
