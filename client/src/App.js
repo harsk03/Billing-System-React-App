@@ -1,6 +1,5 @@
-//client/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import CustomerList from './components/CustomerList';
@@ -18,15 +17,34 @@ import './styles.css';
 import './billStyles.css';
 import './auth.css';
 
+// Separate component for the company branding
+const CompanyBranding = () => {
+  const location = useLocation();
+  
+  // List of paths where branding should not appear
+  const excludedPaths = ['/auth', '/auth/admin', '/auth/cashier'];
+  
+  // Check if current path starts with any excluded path
+  const shouldShowBranding = !excludedPaths.some(path => 
+    location.pathname === path || location.pathname.startsWith('/auth/')
+  );
+
+  if (!shouldShowBranding) return null;
+
+  return (
+    <div className="company-branding">
+      <img src="/Logo-icon.png" alt="ChillBill Logo" />
+      <span>ChillBill</span>
+    </div>
+  );
+};
+
 function App() {
   return (
     <Router>
       <div className="App">
         <div className="header-container">
-          <div className="company-branding">
-            <img src="/Logo-icon.png" alt="ChillBill Logo" />
-            <span>ChillBill</span>
-          </div>
+          <CompanyBranding />
           <Routes>
             {/* Public routes */}
             <Route path="/auth" element={<UserTypeSelection />} />
