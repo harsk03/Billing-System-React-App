@@ -82,7 +82,7 @@ function Navbar() {
         />
       )}
 
-      <style jsx>{`
+      <style jsx="true">{`
         .navbar {
           background-color: var(--primary-color);
           margin-bottom: 30px;

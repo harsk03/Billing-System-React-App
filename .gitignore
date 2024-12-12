@@ -5,6 +5,7 @@ client/node_modules/
 invoices
 server/node_modules/
 server/.env/
+client/.env/
 /.pnp
 .pnp.js
 

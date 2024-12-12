@@ -117,9 +117,9 @@ const Home = () => {
           </button>
           <button 
             className="menu-item"
-            onClick={() => handleNavigation('/bill')}
+            onClick={() => handleNavigation('/bill-history')}
           >
-            Manage Items
+            View Bill History
           </button>
           <button 
             className="menu-item"
