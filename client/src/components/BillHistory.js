@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaEye, FaTimes, FaTrash, FaSort } from 'react-icons/fa';
 
 const BillHistory = () => {
   const [bills, setBills] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('invoice');
+  const [selectedBill, setSelectedBill] = useState(null);
+  const [showBillModal, setShowBillModal] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ 
+    key: 'date', 
+    direction: 'desc' 
+  });
 
   useEffect(() => {
     fetchBills();
@@ -14,7 +20,6 @@ const BillHistory = () => {
   const fetchBills = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/bills/history');
-      // Filter out invalid records during initial data setup
       const validBills = response.data.filter(bill => 
         bill &&
         bill.invoiceNumber && 
@@ -29,8 +34,49 @@ const BillHistory = () => {
     }
   };
 
+  const deleteBill = (invoiceNumber) => {
+    // Frontend-only delete functionality
+    setBills(bills.filter(bill => bill.invoiceNumber !== invoiceNumber));
+  };
+
+  const sortBills = (bills) => {
+    return [...bills].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      
+      if (sortConfig.key === 'date') {
+        return sortConfig.direction === 'desc' 
+          ? dateB - dateA 
+          : dateA - dateB;
+      }
+
+      if (sortConfig.key === 'time') {
+        const timeA = dateA.getHours() * 60 + dateA.getMinutes();
+        const timeB = dateB.getHours() * 60 + dateB.getMinutes();
+
+        return sortConfig.direction === 'desc' 
+          ? timeB - timeA 
+          : timeA - timeB;
+      }
+
+      return 0;
+    });
+  };
+
+  const toggleSortDirection = (key) => {
+    setSortConfig(prevConfig => ({
+      key: key,
+      direction: prevConfig.key === key && prevConfig.direction === 'desc' ? 'asc' : 'desc'
+    }));
+  };
+
+  const viewBillDetails = (bill) => {
+    setSelectedBill(bill);
+    setShowBillModal(true);
+  };
+
   const filterBills = () => {
-    return bills.filter(bill => {
+    let filteredBills = bills.filter(bill => {
       const searchTermLower = searchTerm.toLowerCase();
       
       switch (filterType) {
@@ -40,7 +86,7 @@ const BillHistory = () => {
         case 'month':
           try {
             const date = new Date(bill.date);
-            if (isNaN(date.getTime())) return false; // Invalid date check
+            if (isNaN(date.getTime())) return false;
             const billMonth = date.toLocaleString('default', { month: 'long' });
             return billMonth.toLowerCase().includes(searchTermLower);
           } catch {
@@ -50,7 +96,7 @@ const BillHistory = () => {
         case 'year':
           try {
             const date = new Date(bill.date);
-            if (isNaN(date.getTime())) return false; // Invalid date check
+            if (isNaN(date.getTime())) return false;
             const billYear = date.getFullYear().toString();
             return billYear.includes(searchTerm);
           } catch {
@@ -61,12 +107,14 @@ const BillHistory = () => {
           return false;
       }
     });
+
+    return sortBills(filteredBills);
   };
 
   const formatDate = (dateString) => {
     try {
       const date = new Date(dateString);
-      if (isNaN(date.getTime())) return dateString; // Return original if invalid
+      if (isNaN(date.getTime())) return dateString;
       return date.toLocaleDateString('en-IN');
     } catch {
       return dateString;
@@ -76,7 +124,7 @@ const BillHistory = () => {
   const formatTime = (timeString) => {
     try {
       const date = new Date(timeString);
-      if (isNaN(date.getTime())) return timeString; // Return original if invalid
+      if (isNaN(date.getTime())) return timeString;
       return date.toLocaleTimeString('en-IN', { 
         hour: '2-digit', 
         minute: '2-digit', 
@@ -85,6 +133,69 @@ const BillHistory = () => {
     } catch {
       return timeString;
     }
+  };
+
+  const renderBillDetailsModal = () => {
+    if (!showBillModal || !selectedBill) return null;
+  
+    return (
+      <div className="bill-details-modal-overlay" onClick={() => setShowBillModal(false)}>
+        <div className="bill-details-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="bill-details-modal-close" onClick={() => setShowBillModal(false)}>
+            <FaTimes />
+          </button>
+  
+          <h2 className="text-2xl font-bold mb-4">Bill Details</h2>
+  
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p><strong>Invoice Number:</strong> {selectedBill.invoiceNumber || 'N/A'}</p>
+              <p><strong>Date:</strong> {formatDate(selectedBill.date)}</p>
+              <p><strong>Time:</strong> {formatTime(selectedBill.date)}</p>
+            </div>
+            <div>
+              <p><strong>Cashier:</strong> {selectedBill.cashierInfo || 'Unknown'}</p>
+              <p><strong>Customer:</strong> {selectedBill.customerInfo || 'Walk-in'}</p>
+            </div>
+          </div>
+  
+          {selectedBill.items && selectedBill.items.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="bill-details-table">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="bill-details-table th">Item</th>
+                    <th className="bill-details-table th">Quantity</th>
+                    <th className="bill-details-table th">Price</th>
+                    <th className="bill-details-table th">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedBill.items.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50">
+                      <td className="bill-details-table td">{item.name || 'Unnamed Item'}</td>
+                      <td className="bill-details-table td">{item.quantity || 0}</td>
+                      <td className="bill-details-table td">₹{(item.price || 0).toFixed(2)}</td>
+                      <td className="bill-details-table td">₹{((item.price || 0) * (item.quantity || 0)).toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan="3" className="border border-black px-4 py-2 text-right font-bold">Total</td>
+                    <td className="border border-black px-4 py-2 text-right font-bold">₹{(selectedBill.total || 0).toFixed(2)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center text-gray-500 py-4">
+              No items found for this bill
+            </div>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -121,8 +232,29 @@ const BillHistory = () => {
               <th className="border px-4 py-2">Invoice No.</th>
               <th className="border px-4 py-2">Cashier</th>
               <th className="border px-4 py-2">Net Amount</th>
-              <th className="border px-4 py-2">Date</th>
-              <th className="border px-4 py-2">Time</th>
+              <th className="border px-4 py-2">
+                <div className="flex items-center">
+                  Date 
+                  <button 
+                    onClick={() => toggleSortDirection('date')}
+                    className="ml-2 text-gray-600 hover:text-gray-900"
+                  >
+                    <FaSort />
+                  </button>
+                </div>
+              </th>
+              <th className="border px-4 py-2">
+                <div className="flex items-center">
+                  Time 
+                  <button 
+                    onClick={() => toggleSortDirection('time')}
+                    className="ml-2 text-gray-600 hover:text-gray-900"
+                  >
+                    <FaSort />
+                  </button>
+                </div>
+              </th>
+              <th className="border px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -133,11 +265,27 @@ const BillHistory = () => {
                 <td className="border px-4 py-2">₹{bill.total?.toFixed(2) ?? '0.00'}</td>
                 <td className="border px-4 py-2">{formatDate(bill.date)}</td>
                 <td className="border px-4 py-2">{formatTime(bill.date)}</td>
+                <td className="border px-4 py-2 text-center flex items-center justify-center space-x-2">
+                  <button 
+                    onClick={() => viewBillDetails(bill)}
+                    className="edit-btn p-2 rounded flex items-center justify-center"
+                  >
+                    <FaEye className="mr-2" /> View Bill
+                  </button>
+                  <button 
+                    onClick={() => deleteBill(bill.invoiceNumber)}
+                    className="delete-btn p-2 rounded flex items-center justify-center text-red-500 hover:bg-red-100"
+                  >
+                    <FaTrash className="mr-2" /> Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {renderBillDetailsModal()}
     </div>
   );
 };

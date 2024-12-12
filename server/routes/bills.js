@@ -4,6 +4,11 @@ const Bill = require('../models/Bill');
 
 // Create a new bill
 router.post('/', async (req, res) => {
+  // Validate required fields
+  if (!req.body.invoiceNumber || !req.body.total || !req.body.date) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
   const bill = new Bill({
     invoiceNumber: req.body.invoiceNumber,
     customerInfo: req.body.customerInfo,
@@ -13,8 +18,14 @@ router.post('/', async (req, res) => {
     date: req.body.date || new Date().toISOString().split('T')[0],
     time: req.body.time || new Date().toLocaleTimeString(),
   });
-  
+
   try {
+    // Check if the bill with the same invoice number already exists
+    const existingBill = await Bill.findOne({ invoiceNumber: bill.invoiceNumber });
+    if (existingBill) {
+      return res.status(400).json({ message: 'Bill with the same invoice number already exists' });
+    }
+
     const newBill = await bill.save();
     res.status(201).json(newBill);
   } catch (err) {
@@ -37,10 +48,21 @@ router.get('/history', async (req, res) => {
   try {
     const bills = await Bill.find()
       .sort({ date: -1, time: -1 })
-      .select('invoiceNumber cashierInfo customerInfo total date time');
+      .select('invoiceNumber cashierInfo customerInfo total date time items');
+    
+    console.log(`Retrieved ${bills.length} bills`);
+    
     res.json(bills);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Bill history retrieval error:', {
+      message: error.message,
+      stack: error.stack
+    });
+    
+    res.status(500).json({ 
+      message: 'Error retrieving bill history', 
+      error: error.message 
+    });
   }
 });
 

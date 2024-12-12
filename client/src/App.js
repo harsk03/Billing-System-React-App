@@ -16,6 +16,7 @@ import Settings from './components/Settings';
 import './styles.css';
 import './billStyles.css';
 import './auth.css';
+import './BillDetailsModal.css'; // Import the CSS
 
 // Separate component for the company branding
 const CompanyBranding = () => {

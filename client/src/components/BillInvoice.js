@@ -303,14 +303,20 @@ const BillInvoice = () => {
   };
 
   const handleConfirmUpdate = async () => {
-    updateDateTime();
+    // Get the exact current time at the moment of bill creation
+    const currentDateTime = new Date();
+
     const total = calculateTotal();
     try {
       // Create the bill data object with all necessary fields
       const billData = { 
         total,
-        date,
-        time,
+        date: currentDateTime.toISOString(), // Use ISO string for consistent date and time
+        time: currentDateTime.toLocaleTimeString('en-IN', { 
+          hour: '2-digit', 
+          minute: '2-digit', 
+          hour12: true 
+        }), // Capture time in a readable format
         items,
         invoiceNumber, // Add invoice number
         customerInfo: selectedCustomer === "walk-in" ? "Walk-in" : customers.find(c => c._id === selectedCustomer)?.name,
